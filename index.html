@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Workout Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .login-form, .section {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            width: auto;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .exercise-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .superset-a { border-left: 5px solid #ff6b6b; }
+        .superset-b { border-left: 5px solid #4ecdc4; }
+        .superset-c { border-left: 5px solid #ffe66d; }
+        .superset-d { border-left: 5px solid #a8e6cf; }
+        .superset-e { border-left: 5px solid #ffa07a; }
+
+        .superset-label {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .superset-a .superset-label { background: #ff6b6b; }
+        .superset-b .superset-label { background: #4ecdc4; }
+        .superset-c .superset-label { background: #ffe66d; color: #333; }
+        .superset-d .superset-label { background: #a8e6cf; color: #333; }
+        .superset-e .superset-label { background: #ffa07a; }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            transition: width 0.3s;
+        }
+
+        .client-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .recovery-timer {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #856404;
+        }
+
+        .set-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .set-input label {
+            min-width: 100px;
+            margin: 0;
+        }
+
+        .set-input input {
+            flex: 1;
+        }
+
+        .muscle-group-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .youtube-link {
+            display: inline-block;
+            background: #ff0000;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .youtube-link:hover {
+            background: #cc0000;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 PT Workout Tracker</h1>
+            <p id="userInfo"></p>
+        </div>
+        
+        <div class="content">
+            <!-- Login Section -->
+            <div id="loginSection">
+                <h2>Accedi</h2>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" placeholder="Inserisci username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Inserisci password">
+                </div>
+                <button class="btn" onclick="login()">Accedi</button>
+                <div id="loginError" class="alert alert-error hidden" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- PT Dashboard -->
+            <div id="ptDashboard" class="hidden">
+                <div class="tabs">
+                    <button class="tab active" onclick="showPTTab('clients')">Gestione Clienti</button>
+                    <button class="tab" onclick="showPTTab('workouts')">Crea Scheda</button>
+                    <button class="tab" onclick="showPTTab('monitor')">Monitor Progressi</button>
+                </div>
+
+                <!-- Gestione Clienti -->
+                <div id="ptClientsTab">
+                    <h3>Clienti</h3>
+                    <button class="btn" onclick="showAddClientForm()">➕ Aggiungi Nuovo Cliente</button>
+                    
+                    <div id="addClientForm" class="hidden" style="margin-top: 20px;">
+                        <h4>Nuovo Cliente</h4>
+                        <div class="form-group">
+                            <label>Nome Completo *</label>
+                            <input type="text" id="newClientName">
+                        </div>
+                        <div class="form-group">
+                            <label>Username *</label>
+                            <input type="text" id="newClientUsername">
+                        </div>
+                        <div class="form-group">
+                            <label>Password *</label>
+                            <input type="password" id="newClientPassword">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" id="newClientEmail">
+                        </div>
+                        <button class="btn" onclick="addClient()">Salva Cliente</button>
+                        <button class="btn btn-secondary" onclick="hideAddClientForm()">Annulla</button>
+                    </div>
+
+                    <div id="clientsList" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Crea Scheda -->
+                <div id="ptWorkoutsTab" class="hidden">
+                    <h3>Crea Nuova Scheda</h3>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <select id="workoutClientSelect"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nome Scheda</label>
+                        <select id="workoutProgramName">
+                            <option>Scheda 1</option>
+                            <option>Scheda 2</option>
+                            <option>Scheda 3</option>
+                            <option>Scheda 4</option>
+                            <option>Scheda 5</option>
+                            <option>Scheda 6</option>
+                            <option>Scheda 7</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Numero di Completamenti Richiesti (Settimane)</label>
+                        <input type="number" id="workoutTotalCompletions" value="6" min="1" max="52">
+                    </div>
+                    
+                    <h4>Esercizi</h4>
+                    <div id="exercisesList"></div>
+                    <button class="btn btn-secondary" onclick="addExerciseForm()">➕ Aggiungi Esercizio</button>
+                    <button class="btn" onclick="saveWorkout()">💾 Salva Scheda</button>
+                </div>
+
+                <!-- Monitor Progressi -->
+                <div id="ptMonitorTab" class="hidden">
+                    <h3>Monitor Progressi Clienti</h3>
+                    <div id="monitorContent"></div>
+                </div>
+            </div>
+
+            <!-- Client Dashboard -->
+            <div id="clientDashboard" class="hidden">
+                <div class="tabs">
+                    <button class="tab active" onclick="showClientTab('current')">Scheda Corrente</button>
+                    <button class="tab" onclick="showClientTab('history')">Storico</button>
+                </div>
+
+                <!-- Scheda Corrente -->
+                <div id="clientCurrentTab">
+                    <div id="currentWorkoutContent"></div>
+                </div>
+
+                <!-- Storico -->
+                <div id="clientHistoryTab" class="hidden">
+                    <h3>Storico Allenamenti</h3>
+                    <div id="historyContent"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" id="logoutBtn" onclick="logout()" style="margin-top: 20px; display: none;">Esci</button>
+        </div>
+    </div>
+
+    <script>
+        // Database simulato
+        let users = [
+            {
+                id: 1,
+                name: "Giulia",
+                username: "Giulia_PT",
+                email: "giulia@pt.com",
+                password: "Narbolia123",
+                role: "pt",
+                assignedPTId: null,
+                createdDate: "2025-10-01",
+                accessLink: null,
+                isProtected: false
+            },
+            {
+                id: 2,
+                name: "Fabio Dev",
+                username: "Fab_dev",
+                email: "fab@dev.com",
+                password: "Tiferet456",
+                role: "pt",
+                assignedPTId: null,
+                createdDate: "2025-10-01",
+                accessLink: null,
+                isProtected: true
+            },
+            {
+                id: 3,
+                name: "Fabrizio Sedda",
+                username: "fab.sedda",
+                email: "fab.sedda@client.com",
+                password: "TestCliente789",
+                role: "client",
+                assignedPTId: 1,
+                createdDate: "2025-10-15",
+                accessLink: "/client/fab_sedda_xyz789",
+                isProtected: false
+            }
+        ];
+
+        let workouts = [
+            {
+                id: 1,
+                clientId: 3,
+                programName: "Scheda 1",
+                totalCompletions: 6,
+                currentCompletions: 2,
+                createdDate: "2025-10-10",
+                status: "active",
+                exercises: [
+                    {
+                        name: "Panca Piana",
+                        muscleGroup: "Petto",
+                        sets: 4,
+                        reps: "12-10-8-6",
+                        recoveryTime: 120,
+                        suggestedWeight: 60,
+                        actualWeights: [null, null, null, null],
+                        youtubeLink: "https://youtube.com/watch?v=bench_press",
+                        isSuperset: false,
+                        supersetGroup: null
+                    },
+                    {
+                        name: "Croci Manubri",
+                        muscleGroup: "Petto",
+                        sets: 3,
+                        reps: "12-10-8",
+                        recoveryTime: 0,
+                        suggestedWeight: 18,
+                        actualWeights: [null, null, null],
+                        youtubeLink: "https://youtube.com/watch?v=flyes",
+                        isSuperset: true,
+                        supersetGroup: "A"
+                    },
+                    {
+                        name: "Push-up",
+                        muscleGroup: "Petto",
+                        sets: 3,
+                        reps: "15-12-10",
+                        recoveryTime: 90,
+                        suggestedWeight: 0,
+                        actualWeights: [null, null, null],
+                        youtubeLink: "https://youtube.com/watch?v=pushup",
+                        isSuperset: true,
+                        supersetGroup: "A"
+                    },
+                    {
+                        name: "Plank",
+                        muscleGroup: "Core",
+                        sets: 3,
+                        reps: "60-45-45",
+                        recoveryTime: 60,
+                        suggestedWeight: 0,
+                        actualWeights: [null, null, null],
+                        youtubeLink: "https://youtube.com/watch?v=plank",
+                        isSuperset: false,
+                        supersetGroup: null
+                    }
+                ],
+                completionHistory: [
+                    {
+                        date: "2025-10-12",
+                        time: "18:30",
+                        clientNote: "Ottima sessione, mi sono sentito forte",
+                        weightsUsed: [[60,62,65,67],[18,18,20],[0,0,0],[0,0,0]]
+                    },
+                    {
+                        date: "2025-10-15",
+                        time: "19:00",
+                        clientNote: "Un po' stanco ma completato tutto",
+                        weightsUsed: [[60,60,62,65],[18,20,20],[0,0,0],[0,0,0]]
+                    }
+                ]
+            }
+        ];
+
+        const muscleGroups = ["Dorso", "Spalle", "Bicipiti", "Tricipiti", "Petto", "Gambe", "Addominali", "Core", "Cardio", "Functional", "Altro"];
+        const recoveryTimes = [30, 60, 90, 120, 180, 240, 300];
+        const supersetGroups = ["A", "B", "C", "D", "E"];
+
+        let currentUser = null;
+        let exerciseCounter = 0;
+
+        // Login
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('userInfo').textContent = `Benvenuto, ${user.name}`;
+                
+                if (user.role === 'pt') {
+                    showPTDashboard();
+                } else {
+                    showClientDashboard();
+                }
+                
+                document.getElementById('loginError').classList.add('hidden');
+            } else {
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.textContent = 'Username o password errati';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('ptDashboard').classList.add('hidden');
+            document.getElementById('clientDashboard').classList.add('hidden');
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('userInfo').textContent = '';
+        }
+
+        // PT Dashboard
+        function showPTDashboard() {
+            document.getElementById('ptDashboard').classList.remove('hidden');
+            loadClientsTab();
+            loadWorkoutTab();
+        }
+
+        function showPTTab(tab) {
+            document.querySelectorAll('#ptDashboard .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#ptDashboard > div[id$="Tab"]').forEach(t => t.classList.add('hidden'));
+            
+            if (tab === 'clients') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('ptClientsTab').classList.remove('hidden');
+                loadClientsTab();
+            } else if (tab === 'workouts') {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('ptWorkoutsTab').classList.remove('hidden');
+                loadWorkoutTab();
+            } else if (tab === 'monitor') {
+                document.querySelector('.tab:nth-child(3)').classList.add('active');
+                document.getElementById('ptMonitorTab').classList.remove('hidden');
+                loadMonitorTab();
+            }
+        }
+
+        function loadClientsTab() {
+            const clients = users.filter(u => u.role === 'client');
+            const container = document.getElementById('clientsList');
+            
+            container.innerHTML = clients.map(client => `
+                <div class="client-card">
+                    <h4>${client.name}</h4>
+                    <p><strong>Username:</strong> ${client.username}</p>
+                    <p><strong>Email:</strong> ${client.email || 'Non specificata'}</p>
+                    ${!client.isProtected && currentUser.username !== 'Fab_dev' ? `
+                        <button class="btn-small btn-secondary" onclick="changeClientPassword(${client.id})">Cambia Password</button>
+                    ` : ''}
+                    ${currentUser.username === client.username || (currentUser.username === 'Giulia_PT' && client.username === 'Giulia_PT') ? `
+                        <button class="btn-small btn-secondary" onclick="changeClientPassword(${client.id})">Cambia Password</button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function showAddClientForm() {
+            document.getElementById('addClientForm').classList.remove('hidden');
+        }
+
+        function hideAddClientForm() {
+            document.getElementById('addClientForm').classList.add('hidden');
+            document.getElementById('newClientName').value = '';
+            document.getElementById('newClientUsername').value = '';
+            document.getElementById('newClientPassword').value = '';
+            document.getElementById('newClientEmail').value = '';
+        }
+
+        function addClient() {
+            const name = document.getElementById('newClientName').value.trim();
+            const username = document.getElementById('newClientUsername').value.trim();
+            const password = document.getElementById('newClientPassword').value;
+            const email = document.getElementById('newClientEmail').value.trim();
+            
+            if (!name || !username || !password) {
+                alert('Nome, username e password sono obbligatori');
+                return;
+            }
+            
+            if (users.find(u => u.username === username)) {
+                alert('Username già esistente');
+                return;
+            }
+            
+            const newClient = {
+                id: users.length + 1,
+                name,
+                username,
+                email,
+                password,
+                role: 'client',
+                assignedPTId: currentUser.id,
+                createdDate: new Date().toISOString().split('T')[0],
+                accessLink: `/client/${username}_${Math.random().toString(36).substr(2, 9)}`,
+                isProtected: false
+            };
+            
+            users.push(newClient);
+            alert('Cliente aggiunto con successo!');
+            hideAddClientForm();
+            loadClientsTab();
+        }
+
+        function changeClientPassword(clientId) {
+            const client = users.find(u => u.id === clientId);
+            
+            if (client.isProtected && client.username === 'Fab_dev') {
+                alert('Non puoi modificare la password di questo account (protetto)');
+                return;
+            }
+            
+            const newPassword = prompt(`Nuova password per ${client.name}:`);
+            if (newPassword && newPassword.length >= 6) {
+                client.password = newPassword;
+                alert('Password modificata con successo!');
+            } else if (newPassword) {
+                alert('La password deve essere di almeno 6 caratteri');
+            }
+        }
+
+        function loadWorkoutTab() {
+            const clients = users.filter(u => u.role === 'client');
+            const select = document.getElementById('workoutClientSelect');
+            select.innerHTML = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        function addExerciseForm() {
+            const id = exerciseCounter++;
+            const container = document.getElementById('exercisesList');
+            const div = document.createElement('div');
+            div.className = 'exercise-card';
+            div.id = `exercise-${id}`;
+            div.innerHTML = `
+                <h4>Esercizio ${id + 1}</h4>
+                <div class="form-group">
+                    <label>Nome Esercizio</label>
+                    <input type="text" id="ex-name-${id}">
+                </div>
+                <div class="form-group">
+                    <label>Gruppo Muscolare</label>
+                    <select id="ex-muscle-${id}">
+                        ${muscleGroups.map(m => `<option>${m}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Serie</label>
+                    <input type="number" id="ex-sets-${id}" value="3" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Ripetizioni (es: 12 o 12-10-8-6)</label>
+                    <input type="text" id="ex-reps-${id}" value="12">
+                </div>
+                <div class="form-group">
+                    <label>Tempo Recupero (secondi)</label>
+                    <select id="ex-recovery-${id}">
+                        ${recoveryTimes.map(t => `<option value="${t}">${t}s</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Peso Suggerito (kg)</label>
+                    <input type="number" id="ex-weight-${id}" value="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Link YouTube</label>
+                    <input type="url" id="ex-youtube-${id}" placeholder="https://youtube.com/watch?v=...">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="ex-superset-${id}" onchange="toggleSuperset(${id})"> Superset
+                    </label>
+                    <select id="ex-superset-group-${id}" class="hidden">
+                        ${supersetGroups.map(s => `<option>${s}</option>`).join('')}
+                    </select>
+                </div>
+                <button class="btn-small btn-danger" onclick="removeExercise(${id})">Rimuovi</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function toggleSuperset(id) {
+            const checkbox = document.getElementById(`ex-superset-${id}`);
+            const select = document.getElementById(`ex-superset-group-${id}`);
+            select.classList.toggle('hidden', !checkbox.checked);
+        }
+
+        function removeExercise(id) {
+            document.getElementById(`exercise-${id}`).remove();
+        }
+
+        function saveWorkout() {
+            const clientId = parseInt(document.getElementById('workoutClientSelect').value);
+            const programName = document.getElementById('workoutProgramName').value;
+            const totalCompletions = parseInt(document.getElementById('workoutTotalCompletions').value);
+            
+            const exercises = [];
+            document.querySelectorAll('#exercisesList .exercise-card').forEach(card => {
+                const id = card.id.split('-')[1];
+                const name = document.getElementById(`ex-name-${id}`).value;
+                const muscleGroup = document.getElementById(`ex-muscle-${id}`).value;
+                const sets = parseInt(document.getElementById(`ex-sets-${id}`).value);
+                const reps = document.getElementById(`ex-reps-${id}`).value;
+                const recoveryTime = parseInt(document.getElementById(`ex-recovery-${id}`).value);
+                const suggestedWeight = parseFloat(document.getElementById(`ex-weight-${id}`).value);
+                const youtubeLink = document.getElementById(`ex-youtube-${id}`).value;
+                const isSuperset = document.getElementById(`ex-superset-${id}`).checked;
+                const supersetGroup = isSuperset ? document.getElementById(`ex-superset-group-${id}`).value : null;
+                
+                if (name && muscleGroup && sets && reps) {
+                    const repsArray = reps.includes('-') ? reps.split('-').map(r => parseInt(r)) : Array(sets).fill(parseInt(reps));
+                    exercises.push({
+                        name,
+                        muscleGroup,
+                        sets,
+                        reps,
+                        recoveryTime,
+                        suggestedWeight,
+                        actualWeights: Array(sets).fill(null),
+                        youtubeLink,
+                        isSuperset,
+                        supersetGroup
+                    });
+                }
+            });
+            
+            if (exercises.length === 0) {
+                alert('Aggiungi almeno un esercizio!');
+                return;
+            }
+            
+            const newWorkout = {
+                id: workouts.length + 1,
+                clientId,
+                programName,
+                totalCompletions,
+                currentCompletions: 0,
+                createdDate: new Date().toISOString().split('T')[0],
+                status: 'active',
+                exercises,
+                completionHistory: []
+            };
+            
+            workouts.push(newWorkout);
+            alert('Scheda creata con successo!');
+            document.getElementById('exercisesList').innerHTML = '';
+            exerciseCounter = 0;
+        }
+
+        function loadMonitorTab() {
+            const clients = users.filter(u => u.role === 'client');
+            const container = document.getElementById('monitorContent');
+            
+            container.innerHTML = clients.map(client => {
+                const clientWorkouts = workouts.filter(w => w.clientId === client.id && w.status === 'active');
+                return `
+                    <div class="client-card">
+                        <h4>${client.name}</h4>
+                        ${clientWorkouts.map(w => `
+                            <div style="margin: 15px 0;">
+                                <strong>${w.programName}</strong>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${(w.currentCompletions / w.totalCompletions * 100)}%">
+                                        ${w.currentCompletions}/${w.totalCompletions}
+                                    </div>
+                                </div>
+                                <p><small>Ultima sessione: ${w.completionHistory.length > 0 ? w.completionHistory[w.completionHistory.length - 1].date : 'Mai'}</small></p>
+                            </div>
+                        `).join('')}
+                        ${clientWorkouts.length === 0 ? '<p>Nessuna scheda attiva</p>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Client Dashboard
+        function showClientDashboard() {
+            document.getElementById('clientDashboard').classList.remove('hidden');
+            loadCurrentWorkoutTab();
+        }
+
+        function showClientTab(tab) {
+            document.querySelectorAll('#clientDashboard .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#clientDashboard > div[id$="Tab"]').forEach(t => t.classList.add('hidden'));
+            
+            if (tab === 'current') {
+                document.querySelector('#clientDashboard .tab:nth-child(1)').classList.add('active');
+                document.getElementById('clientCurrentTab').classList.remove('hidden');
+                loadCurrentWorkoutTab();
+            } else if (tab === 'history') {
+                document.querySelector('#clientDashboard .tab:nth-child(2)').classList.add('active');
+                document.getElementById('clientHistoryTab').classList.remove('hidden');
+                loadHistoryTab();
+            }
+        }
+
+        function loadCurrentWorkoutTab() {
+            const workout = workouts.find(w => w.clientId === currentUser.id && w.status === 'active');
+            const container = document.getElementById('currentWorkoutContent');
+            
+            if (!workout) {
+                container.innerHTML = '<p>Nessuna scheda attiva al momento.</p>';
+                return;
+            }
+            
+            const progressPercent = (workout.currentCompletions / workout.totalCompletions * 100);
+            
+            container.innerHTML = `
+                <h3>${workout.programName}</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progressPercent}%">
+                        ${workout.currentCompletions}/${workout.totalCompletions} completamenti
+                    </div>
+                </div>
+                
+                ${workout.exercises.map((ex, idx) => {
+                    const repsArray = ex.reps.includes('-') ? ex.reps.split('-') : Array(ex.sets).fill(ex.reps);
+                    const supersetClass = ex.isSuperset ? `superset-${ex.supersetGroup.toLowerCase()}` : '';
+                    
+                    return `
+                        <div class="exercise-card ${supersetClass}">
+                            ${ex.isSuperset ? `<div class="superset-label">Superset ${ex.supersetGroup}</div>` : ''}
+                            <h4>${ex.name}</h4>
+                            <span class="muscle-group-badge">${ex.muscleGroup}</span>
+                            <p><strong>Serie:</strong> ${ex.sets} | <strong>Ripetizioni:</strong> ${ex.reps}</p>
+                            ${ex.recoveryTime > 0 ? `<p><strong>Recupero:</strong> ${ex.recoveryTime}s</p>` : ''}
+                            ${ex.youtubeLink ? `<a href="${ex.youtubeLink}" target="_blank" class="youtube-link">📺 Guarda Video</a>` : ''}
+                            
+                            ${repsArray.map((reps, setIdx) => `
+                                <div class="set-input">
+                                    <label>Set ${setIdx + 1} (${reps} reps):</label>
+                                    <input type="number" id="weight-${idx}-${setIdx}" placeholder="Peso (kg)" min="0" step="0.5">
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }).join('')}
+                
+                <div class="form-group">
+                    <label>Note (opzionale)</label>
+                    <textarea id="clientNote" placeholder="Aggiungi una nota su come è andato l'allenamento..."></textarea>
+                </div>
+                
+                <button class="btn" onclick="completeWorkout(${workout.id})">✅ Completa Allenamento</button>
+            `;
+        }
+
+        function completeWorkout(workoutId) {
+            const workout = workouts.find(w => w.id === workoutId);
+            const clientNote = document.getElementById('clientNote').value;
+            
+            const weightsUsed = workout.exercises.map((ex, idx) => {
+                const repsArray = ex.reps.includes('-') ? ex.reps.split('-') : Array(ex.sets).fill(ex.reps);
+                return repsArray.map((_, setIdx) => {
+                    const input = document.getElementById(`weight-${idx}-${setIdx}`);
+                    return input ? parseFloat(input.value) || 0 : 0;
+                });
+            });
+            
+            const now = new Date();
+            workout.completionHistory.push({
+                date: now.toISOString().split('T')[0],
+                time: now.toTimeString().split(' ')[0].substring(0, 5),
+                clientNote,
+                weightsUsed
+            });
+            
+            workout.currentCompletions++;
+            
+            if (workout.currentCompletions >= workout.totalCompletions) {
+                workout.status = 'expired';
+                alert('Complimenti! Hai completato l\'intero programma! 🎉');
+            } else {
+                alert(`Allenamento completato! (${workout.currentCompletions}/${workout.totalCompletions})`);
+            }
+            
+            loadCurrentWorkoutTab();
+        }
+
+        function loadHistoryTab() {
+            const clientWorkouts = workouts.filter(w => w.clientId === currentUser.id);
+            const container = document.getElementById('historyContent');
+            
+            if (clientWorkouts.length === 0) {
+                container.innerHTML = '<p>Nessun allenamento nello storico.</p>';
+                return;
+            }
+            
+            container.innerHTML = clientWorkouts.map(workout => `
+                <div class="client-card">
+                    <h4>${workout.programName} (${workout.status === 'active' ? 'Attiva' : 'Completata'})</h4>
+                    <p><strong>Progressi:</strong> ${workout.currentCompletions}/${workout.totalCompletions}</p>
+                    
+                    ${workout.completionHistory.length > 0 ? `
+                        <h5>Storico Completamenti:</h5>
+                        ${workout.completionHistory.map(h => `
+                            <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                                <p><strong>${h.date} - ${h.time}</strong></p>
+                                ${h.clientNote ? `<p><em>"${h.clientNote}"</em></p>` : ''}
+                            </div>
+                        `).join('')}
+                    ` : '<p>Nessun completamento registrato</p>'}
+                </div>
+            `).join('');
+        }
+
+        // Auto-load se già loggato (per test)
+        // Rimuovi in produzione
+    </script>
+</body>
+</html>
