@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
+<!-- saved from url=(0152)https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/6182d419025e0f689152773f105591ad/44f8c838-d138-4d3c-a6df-d2cef612ac99/index.html -->
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT Workout Manager</title>
     
     <!-- Supabase SDK v2.x -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./index_files/supabase-js@2"></script>
     <style>
         :root {
           /* Primitive Color Tokens */
@@ -827,11 +827,11 @@
                         <h1 style="text-align: center; margin-bottom: 32px;">PT Workout Manager</h1>
                         
                         <div class="role-selector">
-                            <div class="role-btn" onclick="selectRole('pt')" id="ptRole">
+                            <div class="role-btn" onclick="selectRole(&#39;pt&#39;)" id="ptRole">
                                 <h3>Personal Trainer</h3>
                                 <p style="font-size: 12px; color: var(--color-text-secondary);">Gestisci clienti e workout</p>
                             </div>
-                            <div class="role-btn" onclick="selectRole('client')" id="clientRole">
+                            <div class="role-btn" onclick="selectRole(&#39;client&#39;)" id="clientRole">
                                 <h3>Cliente</h3>
                                 <p style="font-size: 12px; color: var(--color-text-secondary);">Visualizza i tuoi allenamenti</p>
                             </div>
@@ -851,12 +851,12 @@
                         <form id="loginForm" onsubmit="login(event)">
                             <div class="form-group">
                                 <label class="form-label">Email</label>
-                                <input type="email" id="email" class="form-control" required>
+                                <input type="email" id="email" class="form-control" required="">
                                 <small style="color: var(--color-text-secondary);">Usa l'email del tuo account Supabase</small>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Password</label>
-                                <input type="password" id="password" class="form-control" required>
+                                <input type="password" id="password" class="form-control" required="">
                             </div>
                             <button type="submit" class="btn btn--primary btn--full-width" id="loginButton">Accedi</button>
                         </form>
@@ -885,15 +885,15 @@
             <div class="main-content">
                 <!-- PT Dashboard Navigation -->
                 <div class="bottom-nav" style="position: static; margin-bottom: 24px; border: 1px solid var(--color-border); border-radius: var(--radius-base); background: var(--color-bg-1);">
-                    <div class="nav-item active" onclick="showPTSection('clients')" id="clientsTab">
+                    <div class="nav-item active" onclick="showPTSection(&#39;clients&#39;)" id="clientsTab">
                         <div class="nav-icon">👥</div>
                         <span>Gestione Clienti</span>
                     </div>
-                    <div class="nav-item" onclick="showPTSection('create')" id="createTab">
+                    <div class="nav-item" onclick="showPTSection(&#39;create&#39;)" id="createTab">
                         <div class="nav-icon">📝</div>
                         <span>Crea Scheda</span>
                     </div>
-                    <div class="nav-item" onclick="showPTSection('monitor')" id="monitorTab">
+                    <div class="nav-item" onclick="showPTSection(&#39;monitor&#39;)" id="monitorTab">
                         <div class="nav-icon">📊</div>
                         <span>Monitor Progressi</span>
                     </div>
@@ -938,11 +938,11 @@
                 <div id="currentWorkout"></div>
             </div>
             <div class="bottom-nav">
-                <div class="nav-item active" onclick="showClientScreen('current')">
+                <div class="nav-item active" onclick="showClientScreen(&#39;current&#39;)">
                     <div class="nav-icon">🏋️</div>
                     <span>Workout</span>
                 </div>
-                <div class="nav-item" onclick="showClientScreen('history')">
+                <div class="nav-item" onclick="showClientScreen(&#39;history&#39;)">
                     <div class="nav-icon">📊</div>
                     <span>Storico</span>
                 </div>
@@ -961,21 +961,21 @@
                 <form id="workoutForm" onsubmit="saveWorkout(event)">
                     <div class="form-group">
                         <label class="form-label">Seleziona Cliente</label>
-                        <select id="workoutClient" class="form-control" required>
+                        <select id="workoutClient" class="form-control" required="">
                             <option value="">Scegli un cliente...</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Nome Programma</label>
-                        <select id="programName" class="form-control" required>
+                        <select id="programName" class="form-control" required="">
                             <option value="">Seleziona programma...</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Numero Completamenti Richiesti</label>
-                        <input type="number" id="totalCompletions" class="form-control" min="1" max="20" value="6" required>
+                        <input type="number" id="totalCompletions" class="form-control" min="1" max="20" value="6" required="">
                         <small style="color: var(--color-text-secondary);">Quante volte il cliente deve completare questo workout</small>
                     </div>
                     
@@ -998,11 +998,11 @@
                 <div id="historyList"></div>
             </div>
             <div class="bottom-nav">
-                <div class="nav-item" onclick="showClientScreen('current')">
+                <div class="nav-item" onclick="showClientScreen(&#39;current&#39;)">
                     <div class="nav-icon">🏋️</div>
                     <span>Workout</span>
                 </div>
-                <div class="nav-item active" onclick="showClientScreen('history')">
+                <div class="nav-item active" onclick="showClientScreen(&#39;history&#39;)">
                     <div class="nav-icon">📊</div>
                     <span>Storico</span>
                 </div>
@@ -1021,18 +1021,18 @@
                 <form id="addClientForm" onsubmit="saveNewClient(event)">
                     <div class="form-group">
                         <label class="form-label">Nome Completo *</label>
-                        <input type="text" id="clientName" class="form-control" required>
+                        <input type="text" id="clientName" class="form-control" required="">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Username *</label>
-                        <input type="text" id="clientUsername" class="form-control" required>
+                        <input type="text" id="clientUsername" class="form-control" required="">
                         <small style="color: var(--color-text-secondary);">Deve essere unico</small>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Password *</label>
-                        <input type="password" id="clientPassword" class="form-control" required minlength="6">
+                        <input type="password" id="clientPassword" class="form-control" required="" minlength="6">
                         <small style="color: var(--color-text-secondary);">Minimo 6 caratteri</small>
                     </div>
                     
@@ -3244,5 +3244,5 @@
             }
         });
     </script>
-</body>
-</html>
+
+<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 393px !important; left: -999999px !important; opacity: 0 !important; visibility: hidden !important;"><template shadowrootmode="open"><iframe src="chrome-extension://pejdijmoenmkgeppbflobdenhhabjlaj/completion_list.html?username=&amp;colorScheme=&amp;screenX=0&amp;screenY=0&amp;effectiveWindowWidth=1920&amp;isDark=false" frameborder="0" style="width: 9001px !important; height: 100% !important; display: block !important;"></iframe></template></div></body></html>
