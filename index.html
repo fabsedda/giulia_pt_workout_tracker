@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT Workout Manager</title>
     
-    <!-- Firebase SDK v10.x -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Supabase SDK v2.x -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
           /* Primitive Color Tokens */
@@ -841,7 +839,7 @@
                         
                         <!-- Loading/Connection Status -->
                         <div id="connectionStatus" class="hidden" style="padding: 8px; margin-bottom: 16px; border-radius: var(--radius-base); text-align: center; font-size: 12px;">
-                            🟢 Connesso a Firebase
+                            🟢 Connesso a Supabase
                         </div>
                         
                         <div id="loadingSpinner" class="hidden" style="text-align: center; margin: 20px 0;">
@@ -854,7 +852,7 @@
                             <div class="form-group">
                                 <label class="form-label">Email</label>
                                 <input type="email" id="email" class="form-control" required>
-                                <small style="color: var(--color-text-secondary);">Usa l'email del tuo account Firebase</small>
+                                <small style="color: var(--color-text-secondary);">Usa l'email del tuo account Supabase</small>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Password</label>
@@ -863,6 +861,13 @@
                             <button type="submit" class="btn btn--primary btn--full-width" id="loginButton">Accedi</button>
                         </form>
                         
+                        <div style="margin-top: 24px; padding: 16px; background: var(--color-bg-2); border-radius: var(--radius-base); font-size: 12px; color: var(--color-text-secondary);">
+                            📝 <strong>Setup Iniziale:</strong><br>
+                            Per creare gli account PT iniziali:<br>
+                            1. Apri Console (F12)<br>
+                            2. Esegui: <code>createInitialPT('giulia@pt.com', 'Narbolia123', 'Giulia', 'Giulia_PT')</code><br>
+                            3. Esegui: <code>createInitialPT('fab@dev.com', 'Tiferet456', 'Fabio Dev', 'Fab_dev')</code>
+                        </div>
 
                     </div>
                 </div>
@@ -1051,36 +1056,35 @@
 
     <script>
         /*
-        FIREBASE INTEGRATION - PERSONAL TRAINER WORKOUT TRACKER
+        SUPABASE INTEGRATION - PERSONAL TRAINER WORKOUT TRACKER
         
         SECURITY NOTES:
-        - Firestore security rules are set in Firebase console
-        - API key is safe to expose (restricted by domain)
+        - Supabase anon key is safe to expose (protected by RLS)
+        - Row Level Security (RLS) policies protect data
         - Never store sensitive data in client code
-        - Password hashing handled by Firebase Auth
+        - Password hashing handled by Supabase Auth
         
-        DEPLOYMENT TO FIREBASE HOSTING:
-        1. Install Firebase CLI: npm install -g firebase-tools
-        2. Login: firebase login
-        3. Init: firebase init hosting
-        4. Select this project: giulia-pt-workout-tracker
-        5. Deploy: firebase deploy
+        DEPLOYMENT TO NETLIFY:
+        1. Your site: giulia-workout-tracker.netlify.app
+        2. Go to Netlify dashboard
+        3. Drag and drop this index.html file
+        4. Or connect to GitHub repo for auto-deploy
+        5. Done! App is live with Supabase backend
+        
+        SETUP INITIAL PT ACCOUNTS:
+        1. Open browser console on the app
+        2. Run: createInitialPT('giulia@pt.com', 'Narbolia123', 'Giulia', 'Giulia_PT')
+        3. Run: createInitialPT('fab@dev.com', 'Tiferet456', 'Fabio Dev', 'Fab_dev')
+        4. These will create the PT accounts in Supabase
         */
         
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvQzNl6IkHKk6IShuahyxLrQp11Ct3UsI",
-            authDomain: "giulia-pt-workout-tracker.firebaseapp.com",
-            projectId: "giulia-pt-workout-tracker",
-            storageBucket: "giulia-pt-workout-tracker.firebasestorage.app",
-            messagingSenderId: "210789011231",
-            appId: "1:210789011231:web:919dfc4e7a80c063c12a2a"
-        };
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://nkvkmqelojtagdhlqlyu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rdmttcWVsb2p0YWdkaGxxbHl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjQ1MzgsImV4cCI6MjA3NjY0MDUzOH0.wCfpU-cWdGRbCBa6HB7ms7MQ8WeEeJNL5VHs8di3mls';
         
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // Global State
         let currentUser = null;
@@ -1155,6 +1159,7 @@
         function showConnectionStatus() {
             const statusDiv = document.getElementById('connectionStatus');
             if (statusDiv) {
+                statusDiv.innerHTML = '🟢 Connesso a Supabase';
                 statusDiv.classList.remove('hidden');
                 statusDiv.style.background = 'var(--color-bg-3)';
                 statusDiv.style.border = '1px solid var(--color-success)';
@@ -1392,7 +1397,7 @@
             }
         }
 
-        // Firebase Authentication Functions
+        // Supabase Authentication Functions
         function selectRole(role) {
             selectedRole = role;
             document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('selected'));
@@ -1416,22 +1421,28 @@
                 loginButton.disabled = true;
                 loginButton.textContent = '⏳ Accesso...';
                 
-                // Firebase Auth login
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const uid = userCredential.user.uid;
+                // Supabase Auth login
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
                 
-                // Get user data from Firestore
-                const userDoc = await db.collection('users').doc(uid).get();
+                if (error) throw error;
                 
-                if (!userDoc.exists) {
+                // Get user profile from users table
+                const { data: userData, error: userError } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', data.user.id)
+                    .single();
+                
+                if (userError) {
                     throw new Error('Dati utente non trovati. Contatta l\'amministratore.');
                 }
                 
-                const userData = userDoc.data();
-                
                 // Check if user role matches selected role
                 if (userData.role !== selectedRole) {
-                    await auth.signOut();
+                    await supabaseClient.auth.signOut();
                     throw new Error(`Questo account non ha i permessi per accedere come ${selectedRole === 'pt' ? 'Personal Trainer' : 'Cliente'}`);
                 }
                 
@@ -1443,11 +1454,11 @@
                 console.error('Login error:', error);
                 let errorMessage = 'Errore durante l\'accesso';
                 
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                if (error.message === 'Invalid login credentials') {
                     errorMessage = 'Email o password non validi';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Formato email non valido';
-                } else if (error.code === 'auth/too-many-requests') {
+                } else if (error.message === 'Email not confirmed') {
+                    errorMessage = 'Email non confermata. Controlla la tua casella di posta.';
+                } else if (error.message === 'Too many requests') {
                     errorMessage = 'Troppi tentativi falliti. Riprova più tardi.';
                 } else if (error.message) {
                     errorMessage = error.message;
@@ -1463,7 +1474,8 @@
 
         async function logout() {
             try {
-                await auth.signOut();
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) throw error;
                 // Auth state listener will handle UI updates
             } catch (error) {
                 console.error('Logout error:', error);
@@ -1471,27 +1483,35 @@
             }
         }
 
-        // Firebase Firestore CRUD Operations
+        // Supabase CRUD Operations
         
         // Create User (Client)
         async function createClient(ptId, clientData) {
             try {
                 // Create auth user
-                const userCredential = await auth.createUserWithEmailAndPassword(clientData.email, clientData.password);
-                const uid = userCredential.user.uid;
-                
-                // Store user data in Firestore
-                await db.collection('users').doc(uid).set({
-                    name: clientData.name,
-                    username: clientData.username,
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
                     email: clientData.email,
-                    role: 'client',
-                    assignedPTId: ptId,
-                    isProtected: false,
-                    createdDate: firebase.firestore.FieldValue.serverTimestamp()
+                    password: clientData.password
                 });
                 
-                return uid;
+                if (authError) throw authError;
+                
+                // Insert user profile in users table
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .insert([{
+                        id: authData.user.id,
+                        email: clientData.email,
+                        name: clientData.name,
+                        username: clientData.username,
+                        role: 'client',
+                        assigned_pt_id: ptId,
+                        is_protected: false
+                    }])
+                    .select();
+                
+                if (error) throw error;
+                return authData.user.id;
             } catch (error) {
                 console.error('Error creating client:', error);
                 throw error;
@@ -1501,17 +1521,22 @@
         // Create Workout
         async function createWorkout(workoutData) {
             try {
-                await db.collection('workouts').add({
-                    clientId: workoutData.clientId,
-                    clientName: workoutData.clientName,
-                    programName: workoutData.programName,
-                    totalCompletions: workoutData.totalCompletions,
-                    currentCompletions: 0,
-                    createdDate: firebase.firestore.FieldValue.serverTimestamp(),
-                    status: 'active',
-                    exercises: workoutData.exercises,
-                    completionHistory: []
-                });
+                const { data, error } = await supabaseClient
+                    .from('workouts')
+                    .insert([{
+                        client_id: workoutData.clientId,
+                        client_name: workoutData.clientName,
+                        program_name: workoutData.programName,
+                        total_completions: workoutData.totalCompletions,
+                        current_completions: 0,
+                        status: 'active',
+                        exercises: workoutData.exercises,
+                        completion_history: []
+                    }])
+                    .select();
+                
+                if (error) throw error;
+                return data[0];
             } catch (error) {
                 console.error('Error creating workout:', error);
                 throw error;
@@ -1521,12 +1546,14 @@
         // Read Workouts
         async function loadClientWorkouts(clientId) {
             try {
-                const snapshot = await db.collection('workouts')
-                    .where('clientId', '==', clientId)
-                    .orderBy('createdDate', 'desc')
-                    .get();
+                const { data, error } = await supabaseClient
+                    .from('workouts')
+                    .select('*')
+                    .eq('client_id', clientId)
+                    .order('created_at', { ascending: false });
                 
-                return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (error) throw error;
+                return data;
             } catch (error) {
                 console.error('Error loading client workouts:', error);
                 throw error;
@@ -1536,7 +1563,14 @@
         // Update Workout
         async function updateWorkout(workoutId, updates) {
             try {
-                await db.collection('workouts').doc(workoutId).update(updates);
+                const { data, error } = await supabaseClient
+                    .from('workouts')
+                    .update(updates)
+                    .eq('id', workoutId)
+                    .select();
+                
+                if (error) throw error;
+                return data[0];
             } catch (error) {
                 console.error('Error updating workout:', error);
                 throw error;
@@ -1546,7 +1580,12 @@
         // Delete Workout
         async function deleteWorkout(workoutId) {
             try {
-                await db.collection('workouts').doc(workoutId).delete();
+                const { error } = await supabaseClient
+                    .from('workouts')
+                    .delete()
+                    .eq('id', workoutId);
+                
+                if (error) throw error;
             } catch (error) {
                 console.error('Error deleting workout:', error);
                 throw error;
@@ -1556,25 +1595,36 @@
         // Complete Workout
         async function completeWorkout(workoutId, completionData) {
             try {
-                const workoutRef = db.collection('workouts').doc(workoutId);
-                const workoutSnap = await workoutRef.get();
+                // Get current workout
+                const { data: workout, error: fetchError } = await supabaseClient
+                    .from('workouts')
+                    .select('*')
+                    .eq('id', workoutId)
+                    .single();
                 
-                if (!workoutSnap.exists) {
-                    throw new Error('Workout non trovato');
-                }
+                if (fetchError) throw fetchError;
                 
-                const workout = workoutSnap.data();
-                const newCompletions = workout.currentCompletions + 1;
-                const newHistory = [...(workout.completionHistory || []), completionData];
-                const newStatus = newCompletions >= workout.totalCompletions ? 'expired' : 'active';
+                const newCompletions = workout.current_completions + 1;
+                const newHistory = [...(workout.completion_history || []), completionData];
+                const newStatus = newCompletions >= workout.total_completions ? 'expired' : 'active';
                 
-                await workoutRef.update({
-                    currentCompletions: newCompletions,
-                    completionHistory: newHistory,
-                    status: newStatus
-                });
+                // Update workout
+                const { data, error } = await supabaseClient
+                    .from('workouts')
+                    .update({
+                        current_completions: newCompletions,
+                        completion_history: newHistory,
+                        status: newStatus
+                    })
+                    .eq('id', workoutId)
+                    .select();
                 
-                return { newCompletions, totalCompletions: workout.totalCompletions, newStatus };
+                if (error) throw error;
+                return { 
+                    newCompletions, 
+                    totalCompletions: workout.total_completions, 
+                    newStatus 
+                };
             } catch (error) {
                 console.error('Error completing workout:', error);
                 throw error;
@@ -1584,13 +1634,15 @@
         // Load PT Clients
         async function loadPTClients(ptId) {
             try {
-                const snapshot = await db.collection('users')
-                    .where('assignedPTId', '==', ptId)
-                    .where('role', '==', 'client')
-                    .orderBy('createdDate', 'desc')
-                    .get();
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('assigned_pt_id', ptId)
+                    .eq('role', 'client')
+                    .order('created_at', { ascending: false });
                 
-                return snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+                if (error) throw error;
+                return data.map(client => ({ uid: client.id, ...client }));
             } catch (error) {
                 console.error('Error loading PT clients:', error);
                 throw error;
@@ -1609,19 +1661,26 @@
                 }
                 
                 // Get workouts for all clients
-                const snapshot = await db.collection('workouts')
-                    .where('clientId', 'in', clientIds)
-                    .orderBy('createdDate', 'desc')
-                    .get();
+                const { data: workouts, error } = await supabaseClient
+                    .from('workouts')
+                    .select('*')
+                    .in('client_id', clientIds)
+                    .order('created_at', { ascending: false });
                 
-                const workouts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (error) throw error;
                 
                 // Add client names
                 return workouts.map(workout => {
-                    const client = clients.find(c => c.uid === workout.clientId);
+                    const client = clients.find(c => c.uid === workout.client_id);
                     return {
                         ...workout,
-                        clientName: client ? client.name : 'Cliente rimosso'
+                        clientId: workout.client_id,
+                        clientName: workout.client_name || (client ? client.name : 'Cliente rimosso'),
+                        programName: workout.program_name,
+                        totalCompletions: workout.total_completions,
+                        currentCompletions: workout.current_completions,
+                        completionHistory: workout.completion_history || [],
+                        createdDate: workout.created_at
                     };
                 });
             } catch (error) {
@@ -1645,16 +1704,57 @@
         
         async function validateUsername(username) {
             try {
-                const snapshot = await db.collection('users')
-                    .where('username', '==', username)
-                    .limit(1)
-                    .get();
-                return snapshot.empty;
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .select('id')
+                    .eq('username', username)
+                    .limit(1);
+                
+                if (error) throw error;
+                return data.length === 0;
             } catch (error) {
                 console.error('Error validating username:', error);
                 return false;
             }
         }
+        
+        // Function to create initial PT accounts (call manually in console)
+        async function createInitialPT(email, password, name, username) {
+            try {
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password
+                });
+                
+                if (authError) throw authError;
+                
+                // Wait a moment for auth user to be created
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const { error: insertError } = await supabaseClient
+                    .from('users')
+                    .insert([{
+                        id: authData.user.id,
+                        email: email,
+                        name: name,
+                        username: username,
+                        role: 'pt',
+                        assigned_pt_id: null,
+                        is_protected: username === 'Fab_dev'
+                    }]);
+                
+                if (insertError) throw insertError;
+                
+                console.log('PT account created successfully!', { email, name, username });
+                return authData.user.id;
+            } catch (error) {
+                console.error('Error creating PT:', error);
+                throw error;
+            }
+        }
+        
+        // Make createInitialPT available globally for console use
+        window.createInitialPT = createInitialPT;
 
         // PT Dashboard Functions
         function showPTDashboard() {
@@ -1706,7 +1806,6 @@
             const username = document.getElementById('clientUsername').value.trim();
             const email = document.getElementById('clientEmail').value.trim();
             const password = document.getElementById('clientPassword').value;
-            const createButton = document.getElementById('createClientButton');
             
             if (!name || !username || !email || !password) {
                 showError('Tutti i campi sono obbligatori');
@@ -1715,13 +1814,13 @@
             
             try {
                 showLoading(true);
-                createButton.disabled = true;
-                createButton.textContent = '⏳ Creazione...';
                 
-                // Validate username uniqueness
-                const isUsernameValid = await validateUsername(username);
-                if (!isUsernameValid) {
-                    throw new Error('Username già in uso. Scegli un username diverso.');
+                // Validate username uniqueness (skip if empty)
+                if (username) {
+                    const isUsernameValid = await validateUsername(username);
+                    if (!isUsernameValid) {
+                        throw new Error('Username già in uso. Scegli un username diverso.');
+                    }
                 }
                 
                 // Create client
@@ -1751,11 +1850,11 @@
                 console.error('Error creating client:', error);
                 let errorMessage = 'Errore durante la creazione del cliente';
                 
-                if (error.code === 'auth/email-already-in-use') {
+                if (error.message === 'User already registered') {
                     errorMessage = 'Email già registrata. Usa un\'altra email.';
-                } else if (error.code === 'auth/weak-password') {
+                } else if (error.message === 'Password should be at least 6 characters') {
                     errorMessage = 'Password troppo debole. Usa almeno 6 caratteri.';
-                } else if (error.code === 'auth/invalid-email') {
+                } else if (error.message.includes('Invalid email')) {
                     errorMessage = 'Formato email non valido.';
                 } else if (error.message) {
                     errorMessage = error.message;
@@ -1764,8 +1863,6 @@
                 showError(errorMessage);
             } finally {
                 showLoading(false);
-                createButton.disabled = false;
-                createButton.textContent = 'Crea Cliente';
             }
         }
         
@@ -1916,7 +2013,12 @@
                             const clientWorkouts = await loadClientWorkouts(client.uid);
                             const activeWorkouts = clientWorkouts.filter(w => w.status === 'active').length;
                             const expiredWorkouts = clientWorkouts.filter(w => w.status === 'expired').length;
-                            return { ...client, activeWorkouts, expiredWorkouts };
+                            return { 
+                                ...client, 
+                                activeWorkouts, 
+                                expiredWorkouts,
+                                createdDate: client.created_at
+                            };
                         } catch (error) {
                             console.error('Error loading workouts for client:', client.uid, error);
                             return { ...client, activeWorkouts: 0, expiredWorkouts: 0 };
@@ -1973,13 +2075,18 @@
             try {
                 showLoading(true);
                 
-                const clientDoc = await db.collection('users').doc(clientId).get();
-                if (!clientDoc.exists) {
+                const { data: client, error: clientError } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', clientId)
+                    .single();
+                
+                if (clientError || !client) {
                     alert('Cliente non trovato.');
                     return;
                 }
                 
-                const client = { uid: clientDoc.id, ...clientDoc.data() };
+                client.uid = client.id;
             
             // Create edit form
             const editHtml = `
@@ -2066,19 +2173,24 @@
                 }
                 
                 // Check if trying to modify protected password
-                if (newPassword && client.isProtected && currentUser.uid !== clientId) {
+                if (newPassword && client.is_protected && currentUser.uid !== clientId) {
                     alert('Non puoi modificare questa password.');
                     return;
                 }
                 
-                // Update client data in Firestore
+                // Update client data in Supabase
                 const updates = {
                     name: newName,
                     username: newUsername,
                     email: newEmail
                 };
                 
-                await db.collection('users').doc(clientId).update(updates);
+                const { error: updateError } = await supabaseClient
+                    .from('users')
+                    .update(updates)
+                    .eq('id', clientId);
+                
+                if (updateError) throw updateError;
                 
                 // Update password if provided (Firebase Auth)
                 if (newPassword) {
@@ -2101,13 +2213,16 @@
         
         async function copyClientLink(clientId) {
             try {
-                const clientDoc = await db.collection('users').doc(clientId).get();
-                if (!clientDoc.exists) {
+                const { data: client, error: clientError } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', clientId)
+                    .single();
+                
+                if (clientError || !client) {
                     alert('Cliente non trovato.');
                     return;
                 }
-                
-                const client = clientDoc.data();
                 const accessLink = generateAccessLink(client.username);
                 const fullLink = window.location.origin + accessLink;
                 
@@ -2295,14 +2410,26 @@
             try {
                 showLoading(true);
                 
-                // Get workout from Firebase
-                const workoutDoc = await db.collection('workouts').doc(workoutId).get();
-                if (!workoutDoc.exists) {
+                // Get workout from Supabase
+                const { data: workoutData, error: workoutError } = await supabaseClient
+                    .from('workouts')
+                    .select('*')
+                    .eq('id', workoutId)
+                    .single();
+                
+                if (workoutError || !workoutData) {
                     alert('Scheda non trovata.');
                     return;
                 }
                 
-                const workout = { id: workoutDoc.id, ...workoutDoc.data() };
+                const workout = {
+                    id: workoutData.id,
+                    clientId: workoutData.client_id,
+                    programName: workoutData.program_name,
+                    totalCompletions: workoutData.total_completions,
+                    currentCompletions: workoutData.current_completions,
+                    exercises: workoutData.exercises
+                };
             
                 editingWorkoutId = workoutId;
                 
@@ -2415,11 +2542,15 @@
                 saveButton.textContent = '⏳ Salvataggio...';
                 
                 // Get client data
-                const clientDoc = await db.collection('users').doc(clientId).get();
-                if (!clientDoc.exists) {
+                const { data: client, error: clientError } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', clientId)
+                    .single();
+                
+                if (clientError || !client) {
                     throw new Error('Cliente non trovato');
                 }
-                const client = clientDoc.data();
             
             const exercises = [];
             const exerciseForms = document.querySelectorAll('.exercise-form');
@@ -2479,10 +2610,10 @@
                 if (editingWorkoutId) {
                     // UPDATE existing workout
                     await updateWorkout(editingWorkoutId, {
-                        clientId: clientId,
-                        clientName: client.name,
-                        programName: programName,
-                        totalCompletions: totalCompletions,
+                        client_id: clientId,
+                        client_name: client.name,
+                        program_name: programName,
+                        total_completions: totalCompletions,
                         exercises: exercises
                         // Keep existing completion history and current completions
                     });
@@ -2564,18 +2695,26 @@
                 }
             
                 const workout = activeWorkouts[0];
-            const groupedExercises = groupExercisesBySuperset(workout.exercises);
-            const progress = (workout.currentCompletions / workout.totalCompletions) * 100;
+            // Map Supabase field names to expected format
+            const normalizedWorkout = {
+                ...workout,
+                programName: workout.program_name,
+                currentCompletions: workout.current_completions,
+                totalCompletions: workout.total_completions,
+                completionHistory: workout.completion_history || []
+            };
+            const groupedExercises = groupExercisesBySuperset(normalizedWorkout.exercises);
+            const progress = (normalizedWorkout.currentCompletions / normalizedWorkout.totalCompletions) * 100;
             
             // FIXED: Always show program name
-            const workoutTitle = `${workout.programName}`;
+            const workoutTitle = `${normalizedWorkout.programName}`;
             
             container.innerHTML = `
                 <div class="card">
                     <div class="card__header">
                         <h2>${workoutTitle}</h2>
                         <div class="flex justify-between items-center" style="margin-top: 8px;">
-                            <span style="color: var(--color-text-secondary); font-size: 14px;">Completamento ${workout.currentCompletions}/${workout.totalCompletions}</span>
+                            <span style="color: var(--color-text-secondary); font-size: 14px;">Completamento ${normalizedWorkout.currentCompletions}/${normalizedWorkout.totalCompletions}</span>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-bar-fill" style="width: ${progress}%;"></div>
@@ -2745,12 +2884,15 @@
                 completeButton.textContent = '⏳ Completamento...';
                 
                 // Get workout data first
-                const workoutDoc = await db.collection('workouts').doc(workoutId).get();
-                if (!workoutDoc.exists) {
+                const { data: workout, error: workoutError } = await supabaseClient
+                    .from('workouts')
+                    .select('*')
+                    .eq('id', workoutId)
+                    .single();
+                
+                if (workoutError || !workout) {
                     throw new Error('Workout non trovato');
                 }
-                
-                const workout = workoutDoc.data();
                 
                 // Collect all weights used from temp data
                 const weightsUsed = workout.exercises.map((exercise, exerciseIndex) => {
@@ -2777,7 +2919,7 @@
                 
                 // Show success message
                 if (result.newStatus === 'expired') {
-                    alert(`Congratulazioni! Hai completato tutto il programma ${workout.programName}! (${result.newCompletions}/${result.totalCompletions})`);
+                    alert(`Congratulazioni! Hai completato tutto il programma ${workout.program_name}! (${result.newCompletions}/${result.totalCompletions})`);
                 } else {
                     alert(`Workout completato! Progresso: ${result.newCompletions}/${result.totalCompletions}. Ottimo lavoro!`);
                 }
@@ -2814,7 +2956,10 @@
             try {
                 showLoading(true);
                 const clientWorkouts = await loadClientWorkouts(currentUser.uid);
-                const workoutsWithHistory = clientWorkouts.filter(w => w.completionHistory && w.completionHistory.length > 0);
+                const workoutsWithHistory = clientWorkouts.filter(w => {
+                    const history = w.completion_history || w.completionHistory || [];
+                    return history.length > 0;
+                });
             
                 if (workoutsWithHistory.length === 0) {
                     container.innerHTML = `
@@ -2831,11 +2976,12 @@
                 // Flatten all completion history for chronological display
                 const allCompletions = [];
                 workoutsWithHistory.forEach(workout => {
-                if (workout.completionHistory) {
-                    workout.completionHistory.forEach(completion => {
+                const completionHistory = workout.completion_history || workout.completionHistory || [];
+                if (completionHistory && completionHistory.length > 0) {
+                    completionHistory.forEach(completion => {
                         allCompletions.push({
                             ...completion,
-                            programName: workout.programName,
+                            programName: workout.program_name || workout.programName,
                             exercises: workout.exercises,
                             status: workout.status
                         });
@@ -2909,16 +3055,20 @@
         async function deleteWorkoutFirebase(workoutId) {
             try {
                 // Get workout data first for confirmation
-                const workoutDoc = await db.collection('workouts').doc(workoutId).get();
-                if (!workoutDoc.exists) {
+                const { data: workout, error: workoutError } = await supabaseClient
+                    .from('workouts')
+                    .select('*')
+                    .eq('id', workoutId)
+                    .single();
+                
+                if (workoutError || !workout) {
                     alert('Workout non trovato.');
                     return;
                 }
                 
-                const workout = workoutDoc.data();
-                const completionCount = workout.completionHistory ? workout.completionHistory.length : 0;
+                const completionCount = workout.completion_history ? workout.completion_history.length : 0;
                 
-                const confirmMessage = `Sei sicuro di voler eliminare "${workout.programName}" di ${workout.clientName}?\n\nQuesta azione non può essere annullata e rimuoverà:\n- Tutti gli esercizi della scheda\n- Lo storico dei completamenti (${completionCount} sessioni)\n- I progressi del cliente per questa scheda`;
+                const confirmMessage = `Sei sicuro di voler eliminare "${workout.program_name}" di ${workout.client_name}?\n\nQuesta azione non può essere annullata e rimuoverà:\n- Tutti gli esercizi della scheda\n- Lo storico dei completamenti (${completionCount} sessioni)\n- I progressi del cliente per questa scheda`;
                 
                 if (confirm(confirmMessage)) {
                     showLoading(true);
@@ -2927,7 +3077,7 @@
                     await deleteWorkout(workoutId);
                     
                     // Show success message
-                    alert(`✅ Scheda "${workout.programName}" eliminata con successo!\n\nLa scheda è stata rimossa dal profilo di ${workout.clientName}.`);
+                    alert(`✅ Scheda "${workout.program_name}" eliminata con successo!\n\nLa scheda è stata rimossa dal profilo di ${workout.client_name}.`);
                     
                     // Refresh the monitor view
                     await loadProgressMonitor();
@@ -2945,17 +3095,37 @@
             try {
                 showLoading(true);
                 
-                const workoutDoc = await db.collection('workouts').doc(workoutId).get();
-                if (!workoutDoc.exists) {
+                const { data: workoutData, error: workoutError } = await supabaseClient
+                    .from('workouts')
+                    .select('*')
+                    .eq('id', workoutId)
+                    .single();
+                
+                if (workoutError || !workoutData) {
                     alert('Workout non trovato.');
                     return;
                 }
                 
-                const workout = { id: workoutDoc.id, ...workoutDoc.data() };
+                const workout = {
+                    id: workoutData.id,
+                    programName: workoutData.program_name,
+                    clientId: workoutData.client_id,
+                    currentCompletions: workoutData.current_completions,
+                    totalCompletions: workoutData.total_completions,
+                    exercises: workoutData.exercises,
+                    completionHistory: workoutData.completion_history || [],
+                    status: workoutData.status,
+                    createdDate: workoutData.created_at
+                };
                 
                 // Get client data
-                const clientDoc = await db.collection('users').doc(workout.clientId).get();
-                const client = clientDoc.exists ? clientDoc.data() : { name: 'Cliente rimosso' };
+                const { data: client, error: clientError } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', workout.clientId)
+                    .single();
+                
+                const clientData = (clientError || !client) ? { name: 'Cliente rimosso' } : client;
             
             // Create modal with workout details
             const modalHtml = `
@@ -2966,7 +3136,7 @@
                                 <h3>Dettagli ${workout.programName}</h3>
                                 <button class="btn btn--outline btn--sm" onclick="closeWorkoutDetails()">✕ Chiudi</button>
                             </div>
-                            <p style="color: var(--color-text-secondary); margin: 8px 0 0 0;">Cliente: ${client.name} • Creata: ${formatDate(workout.createdDate)}</p>
+                            <p style="color: var(--color-text-secondary); margin: 8px 0 0 0;">Cliente: ${clientData.name} • Creata: ${formatDate(workout.createdDate)}</p>
                         </div>
                         <div class="card__body">
                             <div class="flex justify-between items-center" style="margin-bottom: 16px;">
@@ -3048,7 +3218,7 @@
         
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('PT Workout Tracker with Firebase initialized');
+            console.log('PT Workout Tracker with Supabase initialized');
             
             // Initialize program name dropdown when needed
             setTimeout(() => {
@@ -3059,20 +3229,17 @@
                 }
             }, 100);
             
-            // Check Firebase connection
-            db.enableNetwork().then(() => {
-                console.log('Firebase connected successfully');
-            }).catch((error) => {
-                console.error('Firebase connection error:', error);
-                showError('Problema di connessione a Firebase. Controlla la connessione internet.');
-            });
+            console.log('Supabase client initialized successfully');
+            console.log('Ready to create initial PT accounts via console:');
+            console.log('Run: createInitialPT(\'giulia@pt.com\', \'Narbolia123\', \'Giulia\', \'Giulia_PT\')');
+            console.log('Run: createInitialPT(\'fab@dev.com\', \'Tiferet456\', \'Fabio Dev\', \'Fab_dev\')');
         });
         
-        // Error handling for uncaught Firebase errors
+        // Error handling for uncaught Supabase errors
         window.addEventListener('unhandledrejection', (event) => {
-            if (event.reason && event.reason.code && event.reason.code.includes('firebase')) {
-                console.error('Unhandled Firebase error:', event.reason);
-                showError('Errore di connessione Firebase: ' + (event.reason.message || 'Errore sconosciuto'));
+            if (event.reason && event.reason.message && (event.reason.message.includes('supabase') || event.reason.message.includes('fetch'))) {
+                console.error('Unhandled Supabase error:', event.reason);
+                showError('Errore di connessione Supabase: ' + (event.reason.message || 'Errore sconosciuto'));
                 event.preventDefault();
             }
         });
