@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0152)https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/6182d419025e0f689152773f105591ad/44f8c838-d138-4d3c-a6df-d2cef612ac99/index.html -->
-<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT Workout Manager</title>
     
     <!-- Supabase SDK v2.x -->
-    <script src="./index_files/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
           /* Primitive Color Tokens */
@@ -827,11 +827,11 @@
                         <h1 style="text-align: center; margin-bottom: 32px;">PT Workout Manager</h1>
                         
                         <div class="role-selector">
-                            <div class="role-btn" onclick="selectRole(&#39;pt&#39;)" id="ptRole">
+                            <div class="role-btn" onclick="selectRole('pt')" id="ptRole">
                                 <h3>Personal Trainer</h3>
                                 <p style="font-size: 12px; color: var(--color-text-secondary);">Gestisci clienti e workout</p>
                             </div>
-                            <div class="role-btn" onclick="selectRole(&#39;client&#39;)" id="clientRole">
+                            <div class="role-btn" onclick="selectRole('client')" id="clientRole">
                                 <h3>Cliente</h3>
                                 <p style="font-size: 12px; color: var(--color-text-secondary);">Visualizza i tuoi allenamenti</p>
                             </div>
@@ -851,12 +851,12 @@
                         <form id="loginForm" onsubmit="login(event)">
                             <div class="form-group">
                                 <label class="form-label">Email</label>
-                                <input type="email" id="email" class="form-control" required="">
+                                <input type="email" id="email" class="form-control" required>
                                 <small style="color: var(--color-text-secondary);">Usa l'email del tuo account Supabase</small>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Password</label>
-                                <input type="password" id="password" class="form-control" required="">
+                                <input type="password" id="password" class="form-control" required>
                             </div>
                             <button type="submit" class="btn btn--primary btn--full-width" id="loginButton">Accedi</button>
                         </form>
@@ -885,15 +885,15 @@
             <div class="main-content">
                 <!-- PT Dashboard Navigation -->
                 <div class="bottom-nav" style="position: static; margin-bottom: 24px; border: 1px solid var(--color-border); border-radius: var(--radius-base); background: var(--color-bg-1);">
-                    <div class="nav-item active" onclick="showPTSection(&#39;clients&#39;)" id="clientsTab">
+                    <div class="nav-item active" onclick="showPTSection('clients')" id="clientsTab">
                         <div class="nav-icon">👥</div>
                         <span>Gestione Clienti</span>
                     </div>
-                    <div class="nav-item" onclick="showPTSection(&#39;create&#39;)" id="createTab">
+                    <div class="nav-item" onclick="showPTSection('create')" id="createTab">
                         <div class="nav-icon">📝</div>
                         <span>Crea Scheda</span>
                     </div>
-                    <div class="nav-item" onclick="showPTSection(&#39;monitor&#39;)" id="monitorTab">
+                    <div class="nav-item" onclick="showPTSection('monitor')" id="monitorTab">
                         <div class="nav-icon">📊</div>
                         <span>Monitor Progressi</span>
                     </div>
@@ -938,11 +938,11 @@
                 <div id="currentWorkout"></div>
             </div>
             <div class="bottom-nav">
-                <div class="nav-item active" onclick="showClientScreen(&#39;current&#39;)">
+                <div class="nav-item active" onclick="showClientScreen('current')">
                     <div class="nav-icon">🏋️</div>
                     <span>Workout</span>
                 </div>
-                <div class="nav-item" onclick="showClientScreen(&#39;history&#39;)">
+                <div class="nav-item" onclick="showClientScreen('history')">
                     <div class="nav-icon">📊</div>
                     <span>Storico</span>
                 </div>
@@ -961,21 +961,21 @@
                 <form id="workoutForm" onsubmit="saveWorkout(event)">
                     <div class="form-group">
                         <label class="form-label">Seleziona Cliente</label>
-                        <select id="workoutClient" class="form-control" required="">
+                        <select id="workoutClient" class="form-control" required>
                             <option value="">Scegli un cliente...</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Nome Programma</label>
-                        <select id="programName" class="form-control" required="">
+                        <select id="programName" class="form-control" required>
                             <option value="">Seleziona programma...</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Numero Completamenti Richiesti</label>
-                        <input type="number" id="totalCompletions" class="form-control" min="1" max="20" value="6" required="">
+                        <input type="number" id="totalCompletions" class="form-control" min="1" max="20" value="6" required>
                         <small style="color: var(--color-text-secondary);">Quante volte il cliente deve completare questo workout</small>
                     </div>
                     
@@ -998,11 +998,11 @@
                 <div id="historyList"></div>
             </div>
             <div class="bottom-nav">
-                <div class="nav-item" onclick="showClientScreen(&#39;current&#39;)">
+                <div class="nav-item" onclick="showClientScreen('current')">
                     <div class="nav-icon">🏋️</div>
                     <span>Workout</span>
                 </div>
-                <div class="nav-item active" onclick="showClientScreen(&#39;history&#39;)">
+                <div class="nav-item active" onclick="showClientScreen('history')">
                     <div class="nav-icon">📊</div>
                     <span>Storico</span>
                 </div>
@@ -1021,18 +1021,18 @@
                 <form id="addClientForm" onsubmit="saveNewClient(event)">
                     <div class="form-group">
                         <label class="form-label">Nome Completo *</label>
-                        <input type="text" id="clientName" class="form-control" required="">
+                        <input type="text" id="clientName" class="form-control" required>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Username *</label>
-                        <input type="text" id="clientUsername" class="form-control" required="">
+                        <input type="text" id="clientUsername" class="form-control" required>
                         <small style="color: var(--color-text-secondary);">Deve essere unico</small>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Password *</label>
-                        <input type="password" id="clientPassword" class="form-control" required="" minlength="6">
+                        <input type="password" id="clientPassword" class="form-control" required minlength="6">
                         <small style="color: var(--color-text-secondary);">Minimo 6 caratteri</small>
                     </div>
                     
@@ -1079,8 +1079,8 @@
         */
         
         // Supabase Configuration
-        const SUPABASE_URL = 'https://nkvkmqelojtagdhlqlyu.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rdmttcWVsb2p0YWdkaGxxbHl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjQ1MzgsImV4cCI6MjA3NjY0MDUzOH0.wCfpU-cWdGRbCBa6HB7ms7MQ8WeEeJNL5VHs8di3mls';
+        const SUPABASE_URL = 'https://bxzgzlfghuepktcfrjvr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4emd6bGZnaHVlcGt0Y2ZyanZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyMDc0NzIsImV4cCI6MjA3Njc4MzQ3Mn0.aJGqAbjYpougTMQCMJ_TofckbHP4xGea3-dXRi7nvE0';
         
         // Initialize Supabase
         const { createClient } = supabase;
@@ -1099,8 +1099,46 @@
         const supersetGroups = ['A', 'B', 'C', 'D', 'E'];
         const programNames = ['Scheda 1', 'Scheda 2', 'Scheda 3', 'Scheda 4', 'Scheda 5', 'Scheda 6', 'Scheda 7'];
         
-        // Firebase Authentication State Listener
-        auth.onAuthStateChanged(async (user) => {
+        // Supabase Authentication State Listener
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            if (session && session.user) {
+                try {
+                    showLoading(true);
+                    const userId = session.user.id;
+                    const { data: userData, error } = await supabaseClient
+                        .from('users')
+                        .select('*')
+                        .eq('id', userId)
+                        .single();
+                    if (error || !userData) {
+                        showError('Dati utente non trovati nel database.');
+                        await supabaseClient.auth.signOut();
+                        return;
+                    }
+                    currentUser = {
+                        id: userId,
+                        email: session.user.email,
+                        ...userData
+                    };
+                    showConnectionStatus();
+                    if (userData.role === 'pt') {
+                        showPTDashboard();
+                    } else {
+                        showClientDashboard();
+                    }
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                    showError('Errore nel caricamento dei dati utente: ' + error.message);
+                    await supabaseClient.auth.signOut();
+                } finally {
+                    showLoading(false);
+                }
+            } else {
+                currentUser = null;
+                showLoginPage();
+            }
+        });
+
             if (user) {
                 try {
                     showLoading(true);
@@ -1136,6 +1174,13 @@
                 showLoginPage();
             }
         });
+        
+        // Check for initial session
+        const checkInitialSession = async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            // Auth state change listener will handle the session
+        };
+        checkInitialSession();
         
         // UI Helper Functions
         function showLoading(show) {
@@ -1815,12 +1860,10 @@
             try {
                 showLoading(true);
                 
-                // Validate username uniqueness (skip if empty)
-                if (username) {
-                    const isUsernameValid = await validateUsername(username);
-                    if (!isUsernameValid) {
-                        throw new Error('Username già in uso. Scegli un username diverso.');
-                    }
+                // Validate username uniqueness
+                const isUsernameValid = await validateUsername(username);
+                if (!isUsernameValid) {
+                    throw new Error('Username già in uso. Scegli un username diverso.');
                 }
                 
                 // Create client
@@ -1897,14 +1940,14 @@
                 container.innerHTML = allWorkouts.map(workout => {
                     const progress = (workout.currentCompletions / workout.totalCompletions) * 100;
                 
-                // FIX: Show proper workout status instead of dates
-                const workoutStatus = workout.status === 'active' ? 
-                    `${workout.programName} in corso` : 
-                    `${workout.programName} completata`;
-                
-                const lastSessionText = workout.completionHistory && workout.completionHistory.length > 0 ? 
-                    `Ultima sessione: ${formatDate(workout.completionHistory[workout.completionHistory.length - 1].date)}` : 
-                    'Nessuna sessione completata';
+                    // FIX: Show proper workout status instead of dates
+                    const workoutStatus = workout.status === 'active' ? 
+                        `${workout.programName} in corso` : 
+                        `${workout.programName} completata`;
+                    
+                    const lastSessionText = workout.completionHistory && workout.completionHistory.length > 0 ? 
+                        `Ultima sessione: ${formatDate(workout.completionHistory[workout.completionHistory.length - 1].date)}` : 
+                        'Nessuna sessione completata';
                 
                     return `
                         <div class="card" style="margin-bottom: 16px;">
@@ -1954,31 +1997,14 @@
                         }).join('');
                     
             } catch (error) {
-                console.error('Error loading client history:', error);
-                showError('Errore nel caricamento dello storico: ' + error.message);
+                console.error('Error loading progress monitor:', error);
+                showError('Errore nel caricamento del monitoraggio: ' + error.message);
                 container.innerHTML = `
                     <div class="card">
                         <div class="card__body">
                             <h3>Errore nel caricamento</h3>
-                            <p>Impossibile caricare lo storico. Riprova.</p>
-                            <button class="btn btn--outline" onclick="loadClientHistory()">Ricarica</button>
-                        </div>
-                    </div>
-                `;
-            } finally {
-                showLoading(false);
-            }
-        }
-                
-            } catch (error) {
-                console.error('Error loading clients list:', error);
-                showError('Errore nel caricamento dei clienti: ' + error.message);
-                clientsContainer.innerHTML = `
-                    <div class="card">
-                        <div class="card__body">
-                            <h3>Errore nel caricamento</h3>
-                            <p>Impossibile caricare la lista clienti. Riprova.</p>
-                            <button class="btn btn--outline" onclick="loadClientsList()">Ricarica</button>
+                            <p>Impossibile caricare il monitoraggio. Riprova.</p>
+                            <button class="btn btn--outline" onclick="loadProgressMonitor()">Ricarica</button>
                         </div>
                     </div>
                 `;
@@ -2027,32 +2053,49 @@
                 );
                 
                 clientsContainer.innerHTML = clientsWithWorkouts.map(client => {
-                // Workout counts are already loaded
-                const { activeWorkouts, expiredWorkouts } = client;
-                
-                return `
-                    <div class="card client-card" onclick="viewClientDetails('${client.uid}')">
-                        <div class="card__body">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h3>${client.name}</h3>
-                                    <p style="color: var(--color-text-secondary); margin: 4px 0;">@${client.username}</p>
-                                    <p style="color: var(--color-text-secondary); margin: 4px 0; font-size: 12px;">${client.email}</p>
-                                    <p style="color: var(--color-text-secondary); margin: 4px 0; font-size: 11px;">Creato: ${formatDate(client.createdDate)}</p>
+                    // Workout counts are already loaded
+                    const { activeWorkouts, expiredWorkouts } = client;
+                    
+                    return `
+                        <div class="card client-card" onclick="viewClientDetails('${client.uid}')">
+                            <div class="card__body">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3>${client.name}</h3>
+                                        <p style="color: var(--color-text-secondary); margin: 4px 0;">@${client.username}</p>
+                                        <p style="color: var(--color-text-secondary); margin: 4px 0; font-size: 12px;">${client.email}</p>
+                                        <p style="color: var(--color-text-secondary); margin: 4px 0; font-size: 11px;">Creato: ${formatDate(client.createdDate)}</p>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <button class="btn btn--outline btn--sm" onclick="event.stopPropagation(); editClient('${client.uid}')" style="margin-bottom: 8px;">Modifica</button><br>
+                                        <button class="btn btn--outline btn--sm" onclick="event.stopPropagation(); copyClientLink('${client.uid}')">Copia Link</button>
+                                    </div>
                                 </div>
-                                <div style="text-align: right;">
-                                    <button class="btn btn--outline btn--sm" onclick="event.stopPropagation(); editClient('${client.uid}')" style="margin-bottom: 8px;">Modifica</button><br>
-                                    <button class="btn btn--outline btn--sm" onclick="event.stopPropagation(); copyClientLink('${client.uid}')">Copia Link</button>
+                                <div class="flex gap-16" style="margin-top: 12px;">
+                                    <div class="status status--info">Attivi: ${activeWorkouts}</div>
+                                    <div class="status status--success">Completati: ${expiredWorkouts}</div>
                                 </div>
-                            </div>
-                            <div class="flex gap-16" style="margin-top: 12px;">
-                                <div class="status status--info">Attivi: ${activeWorkouts}</div>
-                                <div class="status status--success">Completati: ${expiredWorkouts}</div>
-                            </div>
                             </div>
                         </div>
                     `;
                 }).join('');
+                
+            } catch (error) {
+                console.error('Error loading clients list:', error);
+                showError('Errore nel caricamento dei clienti: ' + error.message);
+                clientsContainer.innerHTML = `
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Errore nel caricamento</h3>
+                            <p>Impossibile caricare la lista clienti. Riprova.</p>
+                            <button class="btn btn--outline" onclick="loadClientsList()">Ricarica</button>
+                        </div>
+                    </div>
+                `;
+            } finally {
+                showLoading(false);
+            }
+        }
                 
             } catch (error) {
                 console.error('Error loading progress monitor:', error);
@@ -2647,6 +2690,7 @@
                     await createWorkout(workoutData);
                     
                     alert('💾 Scheda creata con successo!');
+                    clearWorkoutForm();
                     returnToDashboard();
                 }
                 
@@ -3244,5 +3288,5 @@
             }
         });
     </script>
-
-<div popover="manual" style="z-index: 2147483647 !important; padding: 0px !important; margin: 0px !important; border-radius: 8px !important; position: fixed !important; color-scheme: normal !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px, rgba(0, 0, 0, 0.18) 0px 8px 15px 6px !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; overflow: hidden !important; backdrop-filter: blur(20px) !important; background-color: rgba(230, 230, 230, 0.8) !important; top: 393px !important; left: -999999px !important; opacity: 0 !important; visibility: hidden !important;"><template shadowrootmode="open"><iframe src="chrome-extension://pejdijmoenmkgeppbflobdenhhabjlaj/completion_list.html?username=&amp;colorScheme=&amp;screenX=0&amp;screenY=0&amp;effectiveWindowWidth=1920&amp;isDark=false" frameborder="0" style="width: 9001px !important; height: 100% !important; display: block !important;"></iframe></template></div></body></html>
+</body>
+</html>
